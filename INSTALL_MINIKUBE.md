@@ -36,7 +36,8 @@
 2. **Apply the MetalLB Manifest**:
 
     ```sh
-    kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.7/manifests/metallb.yaml
+    kubectl apply -f kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.14.5/config/manifests/metallb-native.yaml
+
     ```
 
 3. **Configure MetalLB**:
@@ -47,18 +48,23 @@
 
     ```sh
     kubectl apply -f - <<EOF
-    apiVersion: v1
-    kind: ConfigMap
+    apiVersion: metallb.io/v1beta1
+    kind: IPAddressPool
     metadata:
+      name: default
       namespace: metallb-system
-      name: config
-    data:
-      config: |
-        address-pools:
-        - name: default
-          protocol: layer2
-          addresses:
-          - 192.168.49.240-192.168.49.250
+    spec:
+      addresses:
+        - 192.168.49.240-192.168.49.250
+    ---
+    apiVersion: metallb.io/v1beta1
+    kind: L2Advertisement
+    metadata:
+      name: example
+      namespace: metallb-system
+    spec:
+      ipAddressPools:
+        - default
     EOF
     ```
 
