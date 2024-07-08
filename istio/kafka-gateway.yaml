@@ -1,0 +1,15 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: kafka-gateway
+  namespace: kafka
+spec:
+  selector:
+    istio: ingressgateway # use Istio default gateway
+  servers:
+  - port:
+      number: 9092
+      name: kafka
+      protocol: TCP
+    hosts:
+    - "*"

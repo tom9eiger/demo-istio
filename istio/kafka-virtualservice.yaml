@@ -1,0 +1,16 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: kafka
+  namespace: kafka
+spec:
+  hosts:
+  - "kafka.kafka.svc.cluster.local"
+  tcp:
+  - match:
+    - port: 9092
+    route:
+    - destination:
+        host: kafka
+        port:
+          number: 9092

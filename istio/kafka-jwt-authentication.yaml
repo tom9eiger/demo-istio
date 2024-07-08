@@ -1,0 +1,12 @@
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: kafka-jwt
+  namespace: kafka
+spec:
+  selector:
+    matchLabels:
+      app: kafka-consumer
+  jwtRules:
+  - issuer: "example.com"
+    jwksUri: "http://jwt-issuer.kafka.svc.cluster.local:3000/.well-known/jwks.json"

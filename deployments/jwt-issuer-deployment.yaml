@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jwt-issuer
+  namespace: kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jwt-issuer
+  template:
+    metadata:
+      labels:
+        app: jwt-issuer
+    spec:
+      containers:
+        - name: jwt-issuer
+          image: ghcr.io/tom9eiger/jwt-issuer:latest
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 3000
