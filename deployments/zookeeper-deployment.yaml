@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
       - name: zookeeper
-        image: wurstmeister/zookeeper:3.4.6
+        image: confluentinc/cp-zookeeper:7.6.1
         ports:
         - containerPort: 2181

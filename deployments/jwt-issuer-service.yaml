@@ -11,3 +11,4 @@ spec:
     name: http
   selector:
     app: jwt-issuer
+  type: LoadBalancer

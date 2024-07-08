@@ -11,7 +11,7 @@ spec:
   rules:
   - from:
     - source:
-        ipBlocks: ["<external_producer_ip>/32"]
+        ipBlocks: ["192.168.49.1/32"]
         requestPrincipals: ["*"]
     to:
     - operation:
