@@ -1,41 +1,24 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const bodyParser = require('body-parser');
+const fs = require('fs');
 const path = require('path');
 
 const app = express();
-const PORT = 3000;
-const SECRET_KEY = 'your_secret_key'; // Replace with your own secret key
+const port = 3000;
+const privateKey = fs.readFileSync(path.join(__dirname, 'keys', 'private_key.pem'));
+const jwks = JSON.parse(fs.readFileSync(path.join(__dirname, 'keys', 'jwks.json')));
 
-app.use(bodyParser.json());
-
-// Serve JWKS file
+// Endpoint to serve JWKS
 app.get('/.well-known/jwks.json', (req, res) => {
-    res.sendFile(path.join(__dirname, 'jwks.json'));
+  res.json(jwks);
 });
 
-// Endpoint to generate a new JWT token
-app.post('/generate', (req, res) => {
-    const { username } = req.body;
-    const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: '1h', issuer: 'example.com' });
-    res.json({ token });
+// Endpoint to issue JWT
+app.post('/token', (req, res) => {
+  const token = jwt.sign({ sub: "1234567890", name: "John Doe" }, privateKey, { algorithm: 'RS256', keyid: "1", expiresIn: '1h' });
+  res.json({ token });
 });
 
-// Endpoint to validate the JWT token
-app.get('/validate', (req, res) => {
-    const token = req.headers['authorization'];
-    if (!token) {
-        return res.status(403).send('Token is required');
-    }
-
-    jwt.verify(token.split(' ')[1], SECRET_KEY, (err, decoded) => {
-        if (err) {
-            return res.status(403).send('Invalid token');
-        }
-        res.json({ message: 'Token is valid', decoded });
-    });
-});
-
-app.listen(PORT, () => {
-    console.log(`JWT Issuer running on http://localhost:${PORT}`);
+app.listen(port, () => {
+  console.log(`JWT Issuer listening at http://localhost:${port}`);
 });

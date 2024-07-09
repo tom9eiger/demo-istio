@@ -16,6 +16,7 @@ spec:
       containers:
       - name: kafka-consumer
         image: ghcr.io/tom9eiger/kafka-consumer:latest
+        imagePullPolicy: Always
         env:
         - name: KAFKA_BROKER_URL
           value: kafka-service:29092

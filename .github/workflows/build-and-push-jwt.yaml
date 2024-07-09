@@ -1,42 +1,50 @@
-name: Build and Push JWT Issuer
+name: Build and Deploy JWT Issuer
 
 on:
   push:
     branches:
       - main
-    paths:
-      - 'jwt-issuer/**'
-      - '.github/workflows/build-and-push-jwt.yaml'
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
-    - name: Cache Docker layers
-      uses: actions/cache@v2
-      with:
-        path: /tmp/.buildx-cache
-        key: ${{ runner.os }}-buildx-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-buildx-
+      - name: Generate RSA keys
+        run: |
+          mkdir -p keys
+          openssl genpkey -algorithm RSA -out keys/private_key.pem -pkeyopt rsa_keygen_bits:2048
+          openssl rsa -pubout -in keys/private_key.pem -out keys/public_key.pem
 
-    - name: Log in to GitHub Container Registry
-      uses: docker/login-action@v2
-      with:
-        registry: ghcr.io
-        username: ${{ github.repository_owner }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Convert Public Key to JWKS
+        run: |
+          npm install -g pem-jwk
+          cat keys/public_key.pem | pem-jwk > keys/jwks.json
 
-    - name: Build and push
-      uses: docker/build-push-action@v2
-      with:
-        context: ./jwt-issuer
-        push: true
-        tags: ghcr.io/${{ github.repository_owner }}/jwt-issuer:latest
+      - name: Build Docker image
+        run: |
+          docker build -t <your-docker-registry>/jwt-issuer:latest .
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Push Docker image
+        run: |
+          docker push <your-docker-registry>/jwt-issuer:latest
+
+      - name: Deploy to Kubernetes
+        uses: azure/k8s-deploy@v1
+        with:
+          namespace: kafka
+          manifests: |
+            jwt-issuer-deployment.yaml
+            jwt-issuer-service.yaml

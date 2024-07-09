@@ -1,15 +1,11 @@
-FROM node:14
+FROM node:14-alpine
 
-# Create app directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Install app dependencies
-COPY package*.json ./
+COPY package.json package-lock.json ./
 RUN npm install
 
-# Bundle app source
-COPY . .
+COPY server.js ./
+COPY keys ./keys
 
-# Expose port and start application
-EXPOSE 3000
 CMD ["node", "server.js"]
