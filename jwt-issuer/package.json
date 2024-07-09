@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "description": "Simple JWT Issuer",
   "main": "server.js",
-    "scripts": {
+  "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "jsonwebtoken": "^8.5.1",
-    "pem-jwk": "^2.1.5"
+    "pem-jwk": "^2.0.0"
   }
 }
