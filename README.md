@@ -10,6 +10,7 @@ This repository contains the necessary configurations and deployment files to se
 - Istio CLI (`istioctl`) installed
 - Calico for network policies
 - Docker installed for building images
+- GitHub repository with secrets configured for Docker Hub
 
 ## Step-by-Step Instructions
 
@@ -62,10 +63,8 @@ This repository contains the necessary configurations and deployment files to se
 ### 5. Deploy Kafka Consumer
 
 1. Build and Push Docker Image:
-    ```sh
-    docker build -t <your-dockerhub-username>/kafka-consumer:latest ./kafka-consumer
-    docker push <your-dockerhub-username>/kafka-consumer:latest
-    ```
+    - Configure GitHub repository secrets as described in the setup section.
+    - Push your changes to the `main` branch.
 
 2. Deploy Kafka Consumer:
     ```sh

@@ -16,8 +16,6 @@ spec:
       containers:
       - name: kafka-consumer
         image: ghcr.io/tom9eiger/kafka-consumer:latest
-        ports:
-        - containerPort: 9092
         env:
         - name: KAFKA_BROKER_URL
           value: kafka-service:29092

@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - 'kafka-consumer/**'
-      - '.github/workflows/build-and-push-consumer.yaml'
+      - '.github/workflows/build-and-push-consumer.yml'
 
 jobs:
   build:
