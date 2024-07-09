@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: kafka-consumer
-        image: <your-dockerhub-username>/kafka-consumer:latest
+        image: ghcr.io/tom9eiger/kafka-consumer:latest
         ports:
         - containerPort: 9092
         env:
