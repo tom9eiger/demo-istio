@@ -8,6 +8,7 @@ kubectl apply -f deployments/kafka-service.yaml
 
 echo '#### Deploy Kafka Consumer ####'
 kubectl apply -f deployments/kafka-consumer-deployment.yaml
+kubectl apply -f deployments/kafka-producer-deployment.yaml
 
 echo '#### Deploy Deploy JWT Issuer ####'
 kubectl apply -f deployments/jwt-issuer-deployment.yaml

@@ -9,10 +9,10 @@ token = response.json()['token']
 # Configure Kafka producer
 producer = KafkaProducer(
     bootstrap_servers=os.getenv('KAFKA_BROKER_URL', 'kafka-service.kafka.svc.cluster.local:29092'),
-    security_protocol="SASL_PLAINTEXT",
-    sasl_mechanism="OAUTHBEARER",
-    sasl_plain_username="unused",
-    sasl_plain_password=token
+    # security_protocol="SASL_PLAINTEXT",
+    # sasl_mechanism="OAUTHBEARER",
+    # sasl_plain_username="unused",
+    # sasl_plain_password=token
 )
 
 # Send a test message
