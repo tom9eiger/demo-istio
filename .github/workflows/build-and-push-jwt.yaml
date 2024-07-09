@@ -27,7 +27,7 @@ jobs:
 
       - name: Convert Public Key to JWKS
         run: |
-          cd kafka-jwt
+          ls -l
           npm install -g pem-jwk
           cat keys/public_key.pem | pem-jwk > keys/jwks.json
 
