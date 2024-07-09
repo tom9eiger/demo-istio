@@ -5,12 +5,12 @@ metadata:
   namespace: kafka
 spec:
   hosts:
-  - "kafka.kafka.svc.cluster.local"
+  - "kafka-service.kafka.svc.cluster.local"
   tcp:
   - match:
-    - port: 9092
+    - port: 29092
     route:
     - destination:
-        host: kafka
+        host: kafka-service
         port:
-          number: 9092
+          number: 29092

@@ -15,5 +15,11 @@ spec:
     spec:
       containers:
       - name: kafka-consumer
-        image: confluentinc/cp-kafka:5.5.0
-        command: ["sh", "-c", "echo 'Kafka Consumer Running'"]
+        image: <your-dockerhub-username>/kafka-consumer:latest
+        ports:
+        - containerPort: 9092
+        env:
+        - name: KAFKA_BROKER_URL
+          value: kafka-service:29092
+        - name: KAFKA_TOPIC
+          value: test-topic

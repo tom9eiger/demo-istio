@@ -2,6 +2,7 @@
 echo '#### Deploy Kafka Components ####'
 kubectl apply -f deployments/kafka-namespace.yaml
 kubectl apply -f deployments/zookeeper-deployment.yaml
+kubectl apply -f deployments/zookeeper-service.yaml
 kubectl apply -f deployments/kafka-deployment.yaml
 kubectl apply -f deployments/kafka-service.yaml
 

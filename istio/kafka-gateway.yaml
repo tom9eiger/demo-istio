@@ -8,8 +8,8 @@ spec:
     istio: ingressgateway # use Istio default gateway
   servers:
   - port:
-      number: 9092
-      name: kafka
+      number: 29092
+      name: kafka-service
       protocol: TCP
     hosts:
     - "*"

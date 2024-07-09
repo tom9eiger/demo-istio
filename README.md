@@ -6,6 +6,7 @@ This repository contains the necessary configurations and deployment files to se
 
 - Kubernetes cluster (Minikube, kind, or managed Kubernetes service)
 - kubectl configured to interact with your cluster
+- Helm installed
 - Istio CLI (`istioctl`) installed
 - Calico for network policies
 - Docker installed for building images
@@ -38,7 +39,7 @@ This repository contains the necessary configurations and deployment files to se
     kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
     ```
 
-### 3. Deploy Kafka Components
+### 3. Deploy Zookeeper
 
 1. Create Kafka Namespace:
     ```sh
@@ -50,24 +51,29 @@ This repository contains the necessary configurations and deployment files to se
     kubectl apply -f deployments/zookeeper-deployment.yaml
     ```
 
-3. Deploy Kafka:
+### 4. Deploy Kafka
+
+1. Deploy Kafka:
     ```sh
     kubectl apply -f deployments/kafka-deployment.yaml
-    ```
-
-4. Create Kafka Service:
-    ```sh
     kubectl apply -f deployments/kafka-service.yaml
     ```
 
-### 4. Deploy Kafka Consumer
+### 5. Deploy Kafka Consumer
 
-1. Deploy Kafka Consumer:
+1. Build and Push Docker Image:
     ```sh
-    kubectl apply -f deployments/kafka-consumer-deployment.yaml
+    docker build -t <your-dockerhub-username>/kafka-consumer:latest ./kafka-consumer
+    docker push <your-dockerhub-username>/kafka-consumer:latest
     ```
 
-### 5. Deploy JWT Issuer
+2. Deploy Kafka Consumer:
+    ```sh
+    kubectl apply -f deployments/kafka-consumer-deployment.yaml
+    kubectl apply -f deployments/kafka-consumer-service.yaml
+    ```
+
+### 6. Deploy JWT Issuer
 
 1. Build and Push Docker Image:
     ```sh
@@ -82,7 +88,7 @@ This repository contains the necessary configurations and deployment files to se
     kubectl apply -f deployments/jwt-issuer-service.yaml
     ```
 
-### 6. Configure Istio for Kafka
+### 7. Configure Istio for Kafka
 
 1. Label Kafka Namespace for Istio Injection:
     ```sh
@@ -101,41 +107,41 @@ This repository contains the necessary configurations and deployment files to se
     kubectl apply -f istio/kafka-external-virtualservice.yaml
     ```
 
-### 7. Implement JWT Authentication
+### 8. Implement JWT Authentication
 
 1. Create JWT Authentication Policy:
     ```sh
     kubectl apply -f istio/kafka-jwt-authentication.yaml
     ```
 
-### 8. Implement Authorization Policy
+### 9. Implement Authorization Policy
 
 1. Create Authorization Policy:
     ```sh
     kubectl apply -f istio/kafka-consumer-authorization.yaml
     ```
 
-### 9. Restrict Access to Producer and Use JWT
+### 10. Restrict Access to Producer and Use JWT
 
 1. Create AuthorizationPolicy to restrict access to the Kafka broker:
     ```sh
     kubectl apply -f istio/kafka-authorization.yaml
     ```
 
-### 10. Enable Mutual TLS
+### 11. Enable Mutual TLS
 
 1. Create PeerAuthentication Policy:
     ```sh
     kubectl apply -f istio/peer-authentication.yaml
     ```
 
-### 11. Observability with Istio
+### 12. Observability with Istio
 
 1. Deploy Prometheus, Grafana, and Jaeger:
     ```sh
-    kubectl apply -f https://raw.githubusercontent.com/istio/istio/master/samples/addons/prometheus.yaml
-    kubectl apply -f https://raw.githubusercontent.com/istio/istio/master/samples/addons/grafana.yaml
-    kubectl apply -f https://raw.githubusercontent.com/istio/istio/master/samples/addons/jaeger.yaml
+    kubectl apply -f istio/samples-addons/prometheus.yaml
+    kubectl apply -f istio/samples-addons/grafana.yaml
+    kubectl apply -f istio/samples-addons/jaeger.yaml
     ```
 
 2. Access Grafana Dashboard:
@@ -148,7 +154,7 @@ This repository contains the necessary configurations and deployment files to se
     istioctl dashboard jaeger
     ```
 
-### 12. Configure External Kafka Producer
+### 13. Configure External Kafka Producer
 
 1. Build and Run Kafka Producer Docker Image:
 
@@ -184,6 +190,7 @@ This repository contains the necessary configurations and deployment files to se
 ## Files
 
 - **deployments/kafka-consumer-deployment.yaml**: Deployment configuration for Kafka consumer.
+- **deployments/kafka-consumer-service.yaml**: Service configuration for Kafka consumer.
 - **deployments/kafka-service.yaml**: Service configuration for Kafka.
 - **deployments/zookeeper-deployment.yaml**: Deployment configuration for Zookeeper.
 - **deployments/kafka-deployment.yaml**: Deployment configuration for Kafka.
@@ -197,9 +204,14 @@ This repository contains the necessary configurations and deployment files to se
 - **istio/kafka-external-virtualservice.yaml**: VirtualService for external access.
 - **istio/kafka-authorization.yaml**: AuthorizationPolicy for restricting access.
 - **istio/peer-authentication.yaml**: PeerAuthentication policy to enable mutual TLS.
+- **istio/samples-addons/prometheus.yaml**: Prometheus addon configuration.
+- **istio/samples-addons/grafana.yaml**: Grafana addon configuration.
+- **istio/samples-addons/jaeger.yaml**: Jaeger addon configuration.
 - **jwt-issuer/Dockerfile**: Dockerfile for JWT issuer.
 - **jwt-issuer/package.json**: Package.json for JWT issuer.
 - **jwt-issuer/server.js**: Server script for JWT issuer.
 - **jwt-issuer/jwks.json**: JWKS file for JWT issuer.
 - **kafka-producer/Dockerfile**: Dockerfile for Kafka producer.
 - **kafka-producer/kafka_producer.py**: Kafka producer script to run in the Docker container.
+- **kafka-consumer/Dockerfile**: Dockerfile for Kafka consumer.
+- **kafka-consumer/kafka_consumer.py**: Kafka consumer script to run in the Docker container.

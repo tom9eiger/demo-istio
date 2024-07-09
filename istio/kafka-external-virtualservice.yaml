@@ -10,9 +10,9 @@ spec:
   - kafka-gateway
   tcp:
   - match:
-    - port: 9092
+    - port: 29092
     route:
     - destination:
-        host: kafka
+        host: kafka-service
         port:
-          number: 9092
+          number: 29092

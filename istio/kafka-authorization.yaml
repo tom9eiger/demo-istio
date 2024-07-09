@@ -15,4 +15,4 @@ spec:
         requestPrincipals: ["*"]
     to:
     - operation:
-        ports: ["9092"]
+        ports: ["29092"]

@@ -6,7 +6,7 @@ response = requests.post('http://<jwt_issuer_ip>:3000/generate', json={'username
 token = response.json()['token']
 
 producer = KafkaProducer(
-    bootstrap_servers='192.168.49.241:9092',
+    bootstrap_servers='192.168.49.241:29092',
     security_protocol='SASL_PLAINTEXT',
     sasl_mechanism='PLAIN',
     sasl_plain_username='jwt',
