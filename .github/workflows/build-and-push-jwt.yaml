@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'jwt-issuer/**'
-      - '.github/workflows/build-and-push-jwt.yaml'
 
 jobs:
   build-and-deploy:
@@ -21,36 +18,29 @@ jobs:
 
       - name: Generate RSA keys
         run: |
-          cd jwt-issuer
-          mkdir -p keys
-          openssl genpkey -algorithm RSA -out keys/private_key.pem -pkeyopt rsa_keygen_bits:2048
-          openssl rsa -pubout -in keys/private_key.pem -out keys/public_key.pem
+          mkdir -p jwt-issuer/keys
+          openssl genpkey -algorithm RSA -out jwt-issuer/keys/private_key.pem -pkeyopt rsa_keygen_bits:2048
+          openssl rsa -pubout -in jwt-issuer/keys/private_key.pem -out jwt-issuer/keys/public_key.pem
 
       - name: Convert Public Key to JWKS
         run: |
           cd jwt-issuer
-          ls -l
           npm install -g pem-jwk
           cat keys/public_key.pem | pem-jwk > keys/jwks.json
 
-      - name: Cache Docker layers
-        uses: actions/cache@v2
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
+      - name: Build Docker image
+        run: |
+          cd jwt-issuer
+          docker build -t ghcr.io/${{ github.repository }}/jwt-issuer:latest .
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
-          username: ${{ github.repository_owner }}
+          username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push
-        uses: docker/build-push-action@v2
-        with:
-          context: ./jwt-issuer
-          push: true
-          tags: ghcr.io/${{ github.repository_owner }}/kafka-jwt:latest
+      - name: Push Docker image
+        run: |
+          cd jwt-issuer
+          docker push ghcr.io/${{ github.repository }}/jwt-issuer:latest
