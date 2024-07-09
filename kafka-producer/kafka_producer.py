@@ -3,7 +3,7 @@ import requests
 from kafka import KafkaProducer
 
 # Obtain JWT token
-response = requests.post('http://jwt-issuer.jwt-issuer-namespace.svc.cluster.local:3000/token')
+response = requests.post('http://jwt-issuer.jwt-issuer.svc.cluster.local:3000/token')
 token = response.json()['token']
 
 # Configure Kafka producer
