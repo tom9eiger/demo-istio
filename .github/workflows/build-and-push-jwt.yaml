@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'kafka-jwt/**'
+      - '.github/workflows/build-and-push-jwt.yaml'
 
 jobs:
   build-and-deploy:
@@ -24,20 +27,28 @@ jobs:
 
       - name: Convert Public Key to JWKS
         run: |
+          cd kafka-jwt
           npm install -g pem-jwk
           cat keys/public_key.pem | pem-jwk > keys/jwks.json
 
-      - name: Build Docker image
-        run: |
-          docker build -t ghcr.io/${{ github.repository }}/jwt-issuer:latest .
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
+          username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Push Docker image
-        run: |
-          docker push ghcr.io/${{ github.repository }}/jwt-issuer:latest
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: ./kafka-jwt
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/kafka-jwt:latest
