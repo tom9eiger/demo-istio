@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: jwt-issuer
-  namespace: kafka
+  namespace: jwt-issuer
 spec:
   ports:
   - port: 3000
