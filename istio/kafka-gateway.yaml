@@ -11,5 +11,3 @@ spec:
       number: 29092
       name: kafka-service
       protocol: TCP
-    hosts:
-    - "*"

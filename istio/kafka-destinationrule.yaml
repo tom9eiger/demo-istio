@@ -4,7 +4,9 @@ metadata:
   name: kafka
   namespace: kafka
 spec:
-  host: kafka
+  host: kafka-service
   trafficPolicy:
+    tls:
+      mode: ISTIO_MUTUAL
     loadBalancer:
       simple: ROUND_ROBIN

@@ -1,13 +1,12 @@
 {
-    "keys": [
-      {
-        "kty": "RSA",
-        "kid": "your_key_id",
-        "use": "sig",
-        "alg": "RS256",
-        "n": "your_modulus",
-        "e": "AQAB"
-      }
-    ]
-  }
-  
+  "keys": [
+    {
+      "kty": "RSA",
+      "use": "sig",
+      "kid": "1",
+      "alg": "RS256",
+      "n": "0vx7agoebGcQSuuPiLJXZptNLD9a8t6CygeAyNggKx1BHy9Wb3oRAwWo9B3IbyzsdsgzxvT1wGyFfEw_MqYftMQPOw4g4RoNLOTrqkSSCAjN6IoTbiNDTk5mE1ScXISyw5-2FZEMeN_pQ7RPQ12sdfU9lCOzqRoFCAkzvw9l2DN6l4bvc_rZ0Xc6Ooz8BkpwNuH4cFxg7q7rxztR7r7xvsdfvQ_Od4g5C5wNLzDdqkjzGg5GVu4rjCoxV2PAIHsw6awK_AmK-V2qP8uN0qtxHUXBUOU0nTq4-QpE6xfVY7PR56q3GHtXBj9YY7sw5n9tHg9vxXkQel4xP69-6dEXpPjjsdfNw",
+      "e": "AQAB"
+    }
+  ]
+}
