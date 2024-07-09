@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'kafka-jwt/**'
+      - 'jwt-issuer/**'
       - '.github/workflows/build-and-push-jwt.yaml'
 
 jobs:
@@ -21,12 +21,14 @@ jobs:
 
       - name: Generate RSA keys
         run: |
+          cd jwt-issuer
           mkdir -p keys
           openssl genpkey -algorithm RSA -out keys/private_key.pem -pkeyopt rsa_keygen_bits:2048
           openssl rsa -pubout -in keys/private_key.pem -out keys/public_key.pem
 
       - name: Convert Public Key to JWKS
         run: |
+          cd jwt-issuer
           ls -l
           npm install -g pem-jwk
           cat keys/public_key.pem | pem-jwk > keys/jwks.json
@@ -49,6 +51,6 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: ./kafka-jwt
+          context: ./jwt-issuer
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/kafka-jwt:latest
