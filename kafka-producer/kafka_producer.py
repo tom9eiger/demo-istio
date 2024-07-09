@@ -1,18 +1,20 @@
+import os
 import requests
 from kafka import KafkaProducer
 
-# Get JWT token
-response = requests.post('http://192.168.49.240:3000/generate', json={'username': 'testuser'})
+# Obtain JWT token
+response = requests.post('http://jwt-issuer.jwt-issuer-namespace.svc.cluster.local:3000/token')
 token = response.json()['token']
 
+# Configure Kafka producer
 producer = KafkaProducer(
-    bootstrap_servers='192.168.49.241:29092',
-    security_protocol='SASL_PLAINTEXT',
-    sasl_mechanism='PLAIN',
-    sasl_plain_username='testuser',
+    bootstrap_servers=os.getenv('KAFKA_BROKER_URL', 'kafka-service.kafka.svc.cluster.local:29092'),
+    security_protocol="SASL_PLAINTEXT",
+    sasl_mechanism="OAUTHBEARER",
+    sasl_plain_username="unused",
     sasl_plain_password=token
 )
-producer.send('test-topic', b'Hello, Kafka from external producer with JWT!')
+
+# Send a test message
+producer.send('test-topic', b'Hello, Kafka!')
 producer.flush()
-print("Message sent to Kafka")
-d

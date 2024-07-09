@@ -1,0 +1,46 @@
+name: Build and Push Kafka producer
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'kafka-producer/**'
+      - '.github/workflows/build-and-push-producer.yaml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Cache Docker layers
+      uses: actions/cache@v2
+      with:
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-buildx-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-buildx-
+
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build and push
+      uses: docker/build-push-action@v2
+      with:
+        context: ./kafka-producer
+        push: true
+        tags: ghcr.io/${{ github.repository_owner }}/kafka-producer:latest
+
+    # - name: Verify image
+    #   run: |
+    #     docker run --rm ghcr.io/${{ github.repository_owner }}/kafka-producer:latest python kafka_producer.py

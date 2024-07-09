@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: jwt-issuer
+  namespace: kafka
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - jwt-issuer-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /token
+    route:
+    - destination:
+        host: jwt-issuer
+        port:
+          number: 3000

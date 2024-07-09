@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: jwt-issuer
+  name: jwt-issuer-namespace
   namespace: kafka
 spec:
   replicas: 1

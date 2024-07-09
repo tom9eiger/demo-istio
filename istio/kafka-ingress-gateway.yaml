@@ -26,3 +26,6 @@ spec:
   - port: 29092
     targetPort: 29092
     name: kafka
+  - port: 3000
+    targetPort: 3000
+    name: jwt-issuer

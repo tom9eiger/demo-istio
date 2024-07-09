@@ -1,0 +1,15 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: jwt-issuer-gateway
+  namespace: kafka
+spec:
+  selector:
+    istio: ingressgateway # use Istio default gateway
+  servers:
+  - port:
+      number: 3000
+      name: jwt-issuer
+      protocol: HTTP
+    hosts:
+    - "*"

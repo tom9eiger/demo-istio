@@ -31,7 +31,6 @@ jobs:
       - name: Build Docker image
         run: |
           cd jwt-issuer
-          ls -l
           docker build -t ghcr.io/${{ github.repository }}/jwt-issuer:latest .
 
       - name: Log in to GitHub Container Registry

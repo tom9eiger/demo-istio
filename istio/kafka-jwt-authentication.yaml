@@ -8,5 +8,5 @@ spec:
     matchLabels:
       app: kafka-consumer
   jwtRules:
-  - issuer: "example.com"
-    jwksUri: "http://jwt-issuer.kafka.svc.cluster.local:3000/.well-known/jwks.json"
+  - issuer: "http://jwt-issuer.jwt-issuer-namespace.svc.cluster.local"
+    jwksUri: "http://jwt-issuer.jwt-issuer-namespace.svc.cluster.local:3000/.well-known/jwks.json"
